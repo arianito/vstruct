@@ -2,7 +2,18 @@ package vstruct
 
 import "reflect"
 
-type ValidatorFunc func(fieldName string, value reflect.Value, args...string) string
+type Context struct {
+	Index int
+	Instance interface{}
+	InstanceType reflect.Type
+	InstanceValue reflect.Value
+	Field reflect.StructField
+	FieldName string
+	AliasName string
+	FieldValue reflect.Value
+	Args []string
+}
+type ValidatorFunc func(ctx *Context) string
 
 type ruleObj struct {
 	name string

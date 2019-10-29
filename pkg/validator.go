@@ -7,10 +7,9 @@ import (
 )
 
 type ValidationError struct {
-	Error error `json:"error"`
+	Error    error             `json:"error"`
 	Messages map[string]string `json:"messages"`
 }
-
 
 type Validator interface {
 	Bind(binder func(obj interface{}) error) Validator
@@ -20,9 +19,8 @@ type Validator interface {
 	GetMessages() map[string]string
 }
 
-
 func NewValidator(pointer interface{}) Validator {
-	vm :=  &validator{
+	vm := &validator{
 		obj: pointer,
 		err: new(ValidationError),
 	}
@@ -33,6 +31,7 @@ type validator struct {
 	obj interface{}
 	err *ValidationError
 }
+
 func (v *validator) GetError() error {
 	return v.err.Error
 }
@@ -60,7 +59,7 @@ func (v *validator) Validate() Validator {
 	vf := reflect.ValueOf(v.obj).Elem()
 	ln := tf.NumField()
 	var failed string
-	for i:=0;i<ln;i++ {
+	for i := 0; i < ln; i++ {
 		field := tf.Field(i)
 		fieldName := getNameFromField(field)
 		rule := field.Tag.Get("v")
@@ -69,9 +68,19 @@ func (v *validator) Validate() Validator {
 			lexRule(rule, func(rule string, args ...string) bool {
 				fn := FindRule(rule, field.Type.Kind())
 				if fn != nil {
-					message = fn.fn(fieldName, vf.Field(i), args...)
+					message = fn.fn(&Context{
+						Index:         i,
+						Instance:      v.obj,
+						InstanceType:  tf,
+						InstanceValue: vf,
+						Field:         field,
+						FieldName:     field.Name,
+						AliasName:     fieldName,
+						FieldValue:    vf.Field(i),
+						Args:          args,
+					})
 					return message == ""
-				}else {
+				} else {
 					failed = rule
 					return false
 				}

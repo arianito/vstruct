@@ -13,7 +13,7 @@ var messages = map[string]map[string]interface{}{
 		"active_url":      "آدرس :attribute معتبر نیست.",
 		"after":           ":attribute باید تاریخی بعد از :date باشد.",
 		"after_or_equal":  ":attribute باید تاریخی بعد از :date، یا مطابق با آن باشد.",
-		"alpha":           ":attribute باید فقط حروف الفبا باشد.",
+		"alpha":         ":attribute باید فقط حروف الفبا باشد.",
 		"alpha_dash":      ":attribute باید فقط حروف الفبا، اعداد، خط تیره و زیرخط باشد.",
 		"alpha_num":       ":attribute باید فقط حروف الفبا و اعداد باشد.",
 		"array":           ":attribute باید آرایه باشد.",
@@ -118,7 +118,7 @@ var messages = map[string]map[string]interface{}{
 		"active_url":      "The :attribute is not a valid URL.",
 		"after":           "The :attribute must be a date after :date.",
 		"after_or_equal":  "The :attribute must be a date after or equal to :date.",
-		"alpha":           "The :attribute may only contain letters.",
+		"alpha":         "The :attribute may only contain letters.",
 		"alpha_dash":      "The :attribute may only contain letters, numbers, dashes and underscores.",
 		"alpha_num":       "The :attribute may only contain letters and numbers.",
 		"array":           "The :attribute must be an array.",
@@ -220,6 +220,46 @@ var messages = map[string]map[string]interface{}{
 	},
 }
 
+func SetLocale(locale string) error {
+	if _, ok := messages[locale]; !ok {
+		return fmt.Errorf("locale not found")
+	}
+	lang = locale
+	return nil
+}
+func RegisterLanguage(locale string, data map[string]interface{}) {
+	messages[locale] = data
+}
+
+func RegisterAttributes(keys map[string]string) {
+	obj := messages[lang]
+
+	inner, ok := obj["attributes"]
+	if !ok {
+		obj["attributes"] = keys
+		return
+	}
+	mp := inner.(map[string]interface{})
+	for key, value := range keys {
+		mp[key] = value
+	}
+}
+
+func RegisterExtra(keys map[string]interface{}) {
+	obj := messages[lang]
+	for key, value := range keys {
+		obj[key] = value
+	}
+}
+
+func attribute(name string) string {
+	obj := messages[lang]
+	ok := eval("attributes."+name, obj)
+	if ok == "" {
+		return name
+	}
+	return ok
+}
 func translate(key string, args ...interface{}) string {
 	obj := messages[lang]
 	msg := eval(key, obj)
@@ -268,6 +308,9 @@ func eval(path string, from map[string]interface{}) string {
 	}
 	if value, ok := ifc.(map[string]interface{}); ok && rest != "" {
 		return eval(rest, value)
+	}
+	if value, ok := ifc.(map[string]string); ok && rest != "" {
+		return value[rest]
 	}
 	return ""
 }
