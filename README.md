@@ -19,7 +19,7 @@ type SomeRequest struct {
 	 // you can also register new ones
 	Email string `json:"email" v:"required email string min(6)"`
 	Password string `json:"password" v:"required string min(6)"`
-	Age int `json:"age" v:"required gte(18)"`
+	Age int `json:"age" v:"required min(18)"`
 }
 
 func main()  {
@@ -53,7 +53,7 @@ import (
 type SomeRequest struct {
 	Email string `json:"email" v:"required email string min(6)"`
 	Password string `json:"password" v:"required string min(6)"`
-	Age int `json:"age" v:"required gte(18)"`
+	Age int `json:"age" v:"required min(18)"`
 }
 
 func main()  {
