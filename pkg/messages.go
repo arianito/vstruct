@@ -13,7 +13,7 @@ var messages = map[string]map[string]interface{}{
 		"active_url":      "آدرس :attribute معتبر نیست.",
 		"after":           ":attribute باید تاریخی بعد از :date باشد.",
 		"after_or_equal":  ":attribute باید تاریخی بعد از :date، یا مطابق با آن باشد.",
-		"alpha":         ":attribute باید فقط حروف الفبا باشد.",
+		"alpha":           ":attribute باید فقط حروف الفبا باشد.",
 		"alpha_dash":      ":attribute باید فقط حروف الفبا، اعداد، خط تیره و زیرخط باشد.",
 		"alpha_num":       ":attribute باید فقط حروف الفبا و اعداد باشد.",
 		"array":           ":attribute باید آرایه باشد.",
@@ -36,7 +36,7 @@ var messages = map[string]map[string]interface{}{
 		"dimensions":     "ابعاد تصویر :attribute قابل قبول نیست.",
 		"distinct":       "فیلد :attribute مقدار تکراری دارد.",
 		"email":          ":attribute باید یک ایمیل معتبر باشد.",
-		"ends_with":      "فیلد :attribute باید با یکی از مقادیر زیر خاتمه یابد: :values",
+		"ends_with":      "فیلد :attribute باید با یکی از مقادیر زیر خاتمه یابد، :values",
 		"exists":         ":attribute انتخاب شده، معتبر نیست.",
 		"file":           ":attribute باید یک فایل معتبر باشد.",
 		"filled":         "فیلد :attribute باید مقدار داشته باشد.",
@@ -105,20 +105,24 @@ var messages = map[string]map[string]interface{}{
 			"string":  ":attribute باید برابر با :size کاراکتر باشد.",
 			"array":   ":attribute باید شامل :size آیتم باشد.",
 		},
-		"starts_with": ":attribute باید با یکی از این ها شروع شود: :values",
+		"starts_with": ":attribute باید با یکی از این ها شروع شود، :values",
 		"string":      "فیلد :attribute باید رشته باشد.",
 		"timezone":    "فیلد :attribute باید یک منطقه زمانی معتبر باشد.",
 		"unique":      ":attribute قبلا انتخاب شده است.",
 		"uploaded":    "بارگذاری فایل :attribute موفقیت آمیز نبود.",
 		"url":         ":attribute معتبر نمی‌باشد.",
 		"uuid":        ":attribute باید یک UUID معتبر باشد.",
+		"phone":       ":attribute باید یک شماره تلفن معتبر باشد.",
+		"mobile":      ":attribute باید یک شماره همراه معتبر باشد.",
+		"persian":     ":attribute باید فقط حروف الفبای فارسی باشد.",
+		"ssn":     ":attribute باید یک کد ملی معتبر باشد.",
 	},
 	"en": {
 		"accepted":        "The :attribute must be accepted.",
 		"active_url":      "The :attribute is not a valid URL.",
 		"after":           "The :attribute must be a date after :date.",
 		"after_or_equal":  "The :attribute must be a date after or equal to :date.",
-		"alpha":         "The :attribute may only contain letters.",
+		"alpha":           "The :attribute may only contain letters.",
 		"alpha_dash":      "The :attribute may only contain letters, numbers, dashes and underscores.",
 		"alpha_num":       "The :attribute may only contain letters and numbers.",
 		"array":           "The :attribute must be an array.",
@@ -141,7 +145,7 @@ var messages = map[string]map[string]interface{}{
 		"dimensions":     "The :attribute has invalid image dimensions.",
 		"distinct":       "The :attribute field has a duplicate value.",
 		"email":          "The :attribute must be a valid email address.",
-		"ends_with":      "The :attribute must end with one of the following: :values",
+		"ends_with":      "The :attribute must end with one of the following, :values",
 		"exists":         "The selected :attribute is invalid.",
 		"file":           "The :attribute must be a file.",
 		"filled":         "The :attribute field must have a value.",
@@ -183,8 +187,8 @@ var messages = map[string]map[string]interface{}{
 			"string":  "The :attribute may not be greater than :max characters.",
 			"array":   "The :attribute may not have more than :max items.",
 		},
-		"mimes":     "The :attribute must be a file of type: :values.",
-		"mimetypes": "The :attribute must be a file of type: :values.",
+		"mimes":     "The :attribute must be a file of type, :values.",
+		"mimetypes": "The :attribute must be a file of type, :values.",
 		"min": map[string]interface{}{
 			"numeric": "The :attribute must be at least :min.",
 			"file":    "The :attribute must be at least :min kilobytes.",
@@ -210,13 +214,17 @@ var messages = map[string]map[string]interface{}{
 			"string":  "The :attribute must be :size characters.",
 			"array":   "The :attribute must contain :size items.",
 		},
-		"starts_with": "The :attribute must start with one of the following: :values",
+		"starts_with": "The :attribute must start with one of the following, :values",
 		"string":      "The :attribute must be a string.",
 		"timezone":    "The :attribute must be a valid zone.",
 		"unique":      "The :attribute has already been taken.",
 		"uploaded":    "The :attribute failed to upload.",
 		"url":         "The :attribute format is invalid.",
 		"uuid":        "The :attribute must be a valid UUID.",
+		"phone":       "The :attribute must be a valid phone number.",
+		"mobile":      "The :attribute must be a valid mobile number.",
+		"persian":     "The :attribute may only contain persian letters.",
+		"ssn":     "The :attribute must be a valid social security number.",
 	},
 }
 
@@ -277,7 +285,7 @@ func translate(key string, args ...interface{}) string {
 			st = true
 			ot += msg[li:i]
 			li = i
-		} else if (msg[i] == ' ' || msg[i] == ',' || msg[i] == '.') && st {
+		} else if (msg[i] == ' ' || msg[i] == ',' || msg[i] == '.' || i ==ln-1) && st {
 			if j < aln {
 				ot += fmt.Sprintf("%v", args[j])
 				li += len(msg[li:i])
@@ -286,7 +294,9 @@ func translate(key string, args ...interface{}) string {
 			st = false
 		}
 	}
-	ot += msg[li:ln]
+	if li != ln-1 {
+		ot += msg[li:ln]
+	}
 	return ot
 }
 

@@ -2,6 +2,7 @@ package vstruct
 
 import (
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -74,6 +75,27 @@ func removeSlashes(val string) string {
 	val = strings.ReplaceAll(val, "\\,", ",")
 	return strings.Trim(val, " ")
 }
+
+func parseInt(str string) int {
+	val, _ := strconv.Atoi(str)
+	return val
+}
+
+func parseLong(str string) int64 {
+	val, _ := strconv.ParseInt(str, 10, 64)
+	return val
+}
+
+func parseFloat(str string) float64 {
+	val, _ := strconv.ParseFloat(str, 64)
+	return val
+}
+
+func convertFloat(v interface{}) float64  {
+	i := reflect.Indirect(reflect.ValueOf(v))
+	return i.Convert(reflect.TypeOf(float64(0))).Float()
+}
+
 func parseDate(val string) (time.Time, error) {
 	if val == "now" {
 		return time.Now().UTC(), nil
