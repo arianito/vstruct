@@ -34,31 +34,6 @@ func loadInt() bool {
 		}
 		return ""
 	})
-
-	RegisterRule("lt", numbers, func(ctx *Context) string {
-		if convertFloat(ctx.FieldValue.Interface()) >= parseFloat(ctx.Args[0]) {
-			return Translate("lt.numeric", Attribute(ctx.AliasName), ctx.Args[0])
-		}
-		return ""
-	})
-	RegisterRule("lte", numbers, func(ctx *Context) string {
-		if convertFloat(ctx.FieldValue.Interface()) > parseFloat(ctx.Args[0]) {
-			return Translate("lte.numeric", Attribute(ctx.AliasName), ctx.Args[0])
-		}
-		return ""
-	})
-	RegisterRule("gt", numbers, func(ctx *Context) string {
-		if convertFloat(ctx.FieldValue.Interface()) <= parseFloat(ctx.Args[0]) {
-			return Translate("lte.numeric", Attribute(ctx.AliasName), ctx.Args[0])
-		}
-		return ""
-	})
-	RegisterRule("gte", numbers, func(ctx *Context) string {
-		if convertFloat(ctx.FieldValue.Interface()) < parseFloat(ctx.Args[0]) {
-			return Translate("lte.numeric", Attribute(ctx.AliasName), ctx.Args[0])
-		}
-		return ""
-	})
 	RegisterRule("in", numbers, func(ctx *Context) string {
 		val := convertFloat(ctx.FieldValue.Interface())
 		for _, item := range ctx.Args {

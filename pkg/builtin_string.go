@@ -71,6 +71,13 @@ func loadString() bool {
 		}
 		return ""
 	})
+	RegisterRule("size", Combine(reflect.String), func(ctx *Context) string {
+		ln := len(ctx.FieldValue.String())
+		if ln == parseInt(ctx.Args[0]) {
+			return Translate("size.string", Attribute(ctx.AliasName), ctx.Args[0])
+		}
+		return ""
+	})
 	RegisterRule("between", Combine(reflect.String), func(ctx *Context) string {
 		ln := len(ctx.FieldValue.String())
 		if ln < parseInt(ctx.Args[0]) || ln > parseInt(ctx.Args[1]) {
