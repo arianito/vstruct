@@ -5,7 +5,7 @@ VSTRUCT is a library to validate your structs and objects in golang. <br>
 ```bash
 go get -u github.com/xeuus/vstruct
 ```
-###USAGE
+### USAGE
 Simple usage:
 ```go
 package main
@@ -40,7 +40,6 @@ func main()  {
 	}
 }
 ```
-
 Usage with WEB frameworks (like gin):
 ```go
 package main
