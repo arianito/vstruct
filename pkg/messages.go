@@ -253,14 +253,14 @@ func RegisterAttributes(keys map[string]string) {
 	}
 }
 
-func RegisterExtra(keys map[string]interface{}) {
+func AppendToLanguage(keys map[string]interface{}) {
 	obj := messages[lang]
 	for key, value := range keys {
 		obj[key] = value
 	}
 }
 
-func attribute(name string) string {
+func Attribute(name string) string {
 	obj := messages[lang]
 	ok := eval("attributes."+name, obj)
 	if ok == "" {
@@ -268,7 +268,7 @@ func attribute(name string) string {
 	}
 	return ok
 }
-func translate(key string, args ...interface{}) string {
+func Translate(key string, args ...interface{}) string {
 	obj := messages[lang]
 	msg := eval(key, obj)
 	if msg == "" {

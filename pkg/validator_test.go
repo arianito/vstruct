@@ -15,6 +15,7 @@ func TestGetStructAttributes(t *testing.T) {
 	"name": "aryan alikhani 23",
 	"data": "{\"hello\":123}"
 }`
+	LoadBuiltin()
 
 	_ = SetLocale("fa")
 	RegisterAttributes(map[string]string{
