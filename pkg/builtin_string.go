@@ -52,7 +52,7 @@ func loadString() bool {
 		return ""
 	})
 	RegisterRule("mobile_iran", Combine(reflect.String), func(ctx *Context) string {
-		if !GetRegex().PhoneIran(ctx.FieldValue.String()) {
+		if !GetRegex().MobileIran(ctx.FieldValue.String()) {
 			return Translate("phone", Attribute(ctx.AliasName))
 		}
 		return ""
