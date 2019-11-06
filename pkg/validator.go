@@ -12,16 +12,17 @@ type ValidationError struct {
 }
 
 type Validator interface {
-	Bind(binder func(obj interface{}) error) Validator
+	Bind(obj interface{}) Validator
+	BindFunc(binder func(obj interface{}) error) Validator
 	BindJSON(json string) Validator
 	Validate() Validator
 	GetError() error
 	GetMessages() map[string]string
 }
 
-func NewValidator(pointer interface{}) Validator {
+func NewValidator(obj interface{}) Validator {
 	vm := &validator{
-		obj: pointer,
+		obj: obj,
 		err: new(ValidationError),
 	}
 	return vm
@@ -39,12 +40,18 @@ func (v *validator) GetMessages() map[string]string {
 	return v.err.Messages
 }
 
+
+func (v *validator) Bind(obj interface{}) Validator {
+	v.obj = obj
+	return v
+}
+
 func (v *validator) BindJSON(js string) Validator {
 	err := json.Unmarshal([]byte(js), v.obj)
 	v.err.Error = err
 	return v
 }
-func (v *validator) Bind(binder func(obj interface{}) error) Validator {
+func (v *validator) BindFunc(binder func(obj interface{}) error) Validator {
 	err := binder(v.obj)
 	v.err.Error = err
 	return v
@@ -55,8 +62,13 @@ func (v *validator) Validate() Validator {
 		return v
 	}
 	v.err.Messages = make(map[string]string)
-	tf := reflect.TypeOf(v.obj).Elem()
-	vf := reflect.ValueOf(v.obj).Elem()
+	tf := reflect.TypeOf(v.obj)
+	vf := reflect.ValueOf(v.obj)
+	if tf.Kind() != reflect.Struct {
+		tf = tf.Elem()
+		vf = vf.Elem()
+	}
+
 	ln := tf.NumField()
 	var failed string
 	for i := 0; i < ln; i++ {
