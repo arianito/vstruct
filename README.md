@@ -64,7 +64,7 @@ func main()  {
 	
 	r.Handle("POST", "/some", func(ctx *gin.Context) {
 		obj := new(SomeRequest)
-		if v := vstruct.NewValidator(obj).Bind(ctx.Bind).Validate(); v.GetError() != nil {
+		if v := vstruct.NewValidator(obj).BindFunc(ctx.Bind).Validate(); v.GetError() != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error":    v.GetError().Error(),
 				"messages": v.GetMessages(),
