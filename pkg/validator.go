@@ -62,8 +62,8 @@ func (v *validator) Validate() Validator {
 		return v
 	}
 	v.err.Messages = make(map[string]string)
-	tf := reflect.TypeOf(v.obj)
-	vf := reflect.ValueOf(v.obj)
+	tf := reflect.TypeOf(v.obj).Elem()
+	vf := reflect.ValueOf(v.obj).Elem()
 	if tf.Kind() != reflect.Struct {
 		tf = tf.Elem()
 		vf = vf.Elem()
