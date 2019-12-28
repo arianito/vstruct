@@ -39,6 +39,12 @@ func loadString() bool {
 		}
 		return ""
 	})
+	RegisterRule("username", Combine(reflect.String), func(ctx *Context) string {
+		if !GetRegex().Username(ctx.FieldValue.String()) {
+			return Translate("username", Attribute(ctx.AliasName))
+		}
+		return ""
+	})
 	RegisterRule("email", Combine(reflect.String), func(ctx *Context) string {
 		if !GetRegex().Email(ctx.FieldValue.String()) {
 			return Translate("email", Attribute(ctx.AliasName))

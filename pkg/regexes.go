@@ -6,6 +6,7 @@ type RegexFactory struct {
 	alpha       *regexp.Regexp
 	alpha_num   *regexp.Regexp
 	alpha_dash  *regexp.Regexp
+	username  *regexp.Regexp
 	email       *regexp.Regexp
 	phone_iran  *regexp.Regexp
 	mobile_iran *regexp.Regexp
@@ -21,6 +22,7 @@ func GetRegex() *RegexFactory {
 		regexFactory.alpha = regexp.MustCompile("^[a-zA-Z\\s]+$")
 		regexFactory.alpha_num = regexp.MustCompile("^[a-zA-Z0-9\\s]+$")
 		regexFactory.alpha_dash = regexp.MustCompile("^[a-zA-Z]+[\\-_a-zA-Z0-9]+$")
+		regexFactory.username = regexp.MustCompile("^[a-zA-Z]+[_a-zA-Z0-9.]+$")
 		regexFactory.email = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 		regexFactory.phone_iran = regexp.MustCompile("^[0][1-8][0-9]{9}$")
 		regexFactory.mobile_iran = regexp.MustCompile("^[0][9][0-9]{9}$")
@@ -47,6 +49,12 @@ func (r *RegexFactory) AlphaDash(value string) bool {
 		return true
 	}
 	return r.alpha_dash.MatchString(value)
+}
+func (r *RegexFactory) Username(value string) bool {
+	if len(value) < 1 {
+		return true
+	}
+	return r.username.MatchString(value)
 }
 func (r *RegexFactory) Email(value string) bool {
 	if len(value) < 1 {
