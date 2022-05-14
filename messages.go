@@ -48,6 +48,7 @@ func Attribute(name string) string {
 	}
 	return ok
 }
+
 //Translate: translate using builtin dictionary
 func Translate(key string, args ...interface{}) string {
 	obj := messages[lang]
@@ -66,7 +67,7 @@ func Translate(key string, args ...interface{}) string {
 			st = true
 			ot += msg[li:i]
 			li = i
-		} else if (msg[i] == ' ' || msg[i] == ',' || msg[i] == '.' || i ==ln-1) && st {
+		} else if (msg[i] == ' ' || msg[i] == ',' || msg[i] == '.' || i == ln-1) && st {
 			if j < aln {
 				ot += fmt.Sprintf("%v", args[j])
 				li += len(msg[li:i])

@@ -40,7 +40,6 @@ func (v *validator) GetMessages() map[string]string {
 	return v.err.Messages
 }
 
-
 func (v *validator) Bind(obj interface{}) Validator {
 	v.obj = obj
 	return v

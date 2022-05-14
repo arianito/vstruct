@@ -91,7 +91,7 @@ func parseFloat(str string) float64 {
 	return val
 }
 
-func convertFloat(v interface{}) float64  {
+func convertFloat(v interface{}) float64 {
 	i := reflect.Indirect(reflect.ValueOf(v))
 	return i.Convert(reflect.TypeOf(float64(0))).Float()
 }
